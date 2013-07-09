@@ -1,4 +1,3 @@
-package com.suicune.dbwriter;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -15,7 +14,7 @@ public class DBWriter {
 	public String packageName;
 
 	/**
-	 * Change the new DBWriter parameter to your package name.
+	 * TODO: Change the new DBWriter parameter to your package name.
 	 */
 	public static void main(String[] args) {
 		new DBWriter("com.is.a.test").run();
@@ -55,7 +54,8 @@ public class DBWriter {
 
 	private boolean chooseFile() {
 		try {
-			fileName = Paths.get("/home/lapuente/test");
+			// TODO: Change for the 
+			fileName = Paths.get("test");
 
 		} catch (Exception e) {
 			e.printStackTrace();
