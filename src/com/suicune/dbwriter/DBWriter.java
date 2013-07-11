@@ -1,3 +1,4 @@
+package com.suicune.dbwriter;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -8,31 +9,50 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
+/**
+ * LICENSE: You can do with this program whatever you want. It would be cool
+ * though if you named me though.
+ * 
+ * Usage: 
+ *  -Read the README and create a text file with the schema.
+ *  -Change path to file containing schema 
+ *  -Change packageName to your actual package (not required, but useful) 
+ *  -Run! 
+ *  -Copy the generated files to your application folder.
+ *  -Generate imports and format the resulting code as you wish.
+ *  -Add required lines to AndroidManifest.xml (shown in the output after a successful execution)
+ * 
+ * WARNING: 
+ *  -If the schema is not correctly done, this will not throw any error.
+ *   It is your fault and you are to blame.
+ * 
+ * @author Denis Lapuente
+ * 
+ */
 public class DBWriter {
 
-	public Path fileName;
-	public String packageName;
+	// TODO: Change for actual values
+	public final Path fileName = Paths
+			.get("/replace/with/your/path/to/DB/schema");
+	public final String packageName = "replace.with.your.app.package"
+			+ ".database";
 
 	/**
-	 * TODO: Change the new DBWriter parameter to your package name.
+	 * Change the new DBWriter parameter to your package name.
 	 */
 	public static void main(String[] args) {
-		new DBWriter("com.is.a.test").run();
-	}
-
-	public DBWriter(String packageName) {
-		this.packageName = packageName + ".database";
+		new DBWriter().run();
 	}
 
 	public void run() {
-		if (chooseFile()) {
-			DB db = readFile(fileName);
-			if (db != null) {
-				writeContract(db);
-				writeOpenHelper(db);
-				writeProvider(db);
-				outputScreen();
-			}
+		DB db = readFile(fileName);
+		if (db != null) {
+			writeContract(db);
+			writeOpenHelper(db);
+			writeProvider(db);
+			outputScreen();
+		} else {
+			System.out.println("Wrong path to DB schema");
 		}
 	}
 
@@ -50,18 +70,6 @@ public class DBWriter {
 	private class Field {
 		public String mName;
 		public String mType;
-	}
-
-	private boolean chooseFile() {
-		try {
-			// TODO: Change for the 
-			fileName = Paths.get("test");
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
-		return true;
 	}
 
 	private DB readFile(Path fileName) {
@@ -267,11 +275,11 @@ public class DBWriter {
 
 			for (Table table : db.mTables) {
 				writer.write("case " + table.mName.toUpperCase() + ":");
-				writer.write("return ContentResolver.CURSOR_DIR_BASE_TYPE + CONTENT_NAME + \".\" + " + contract
-						+ "." + table.mName + ".TABLE_NAME;");
+				writer.write("return ContentResolver.CURSOR_DIR_BASE_TYPE + CONTENT_NAME + \".\" + "
+						+ contract + "." + table.mName + ".TABLE_NAME;");
 				writer.write("case " + table.mName.toUpperCase() + "_ID:");
-				writer.write("return ContentResolver.CURSOR_ITEM_BASE_TYPE + CONTENT_NAME + \".\" + " + contract
-						+ "." + table.mName + ".TABLE_NAME;");
+				writer.write("return ContentResolver.CURSOR_ITEM_BASE_TYPE + CONTENT_NAME + \".\" + "
+						+ contract + "." + table.mName + ".TABLE_NAME;");
 			}
 
 			writer.write("default:");
@@ -287,7 +295,8 @@ public class DBWriter {
 			for (Table table : db.mTables) {
 				writer.write("case " + table.mName.toUpperCase() + "_ID:");
 				writer.write("case " + table.mName.toUpperCase() + ":");
-				writer.write("return " + contract + "." + table.mName + ".TABLE_NAME;");
+				writer.write("return " + contract + "." + table.mName
+						+ ".TABLE_NAME;");
 			}
 
 			writer.write("default:");
@@ -378,12 +387,15 @@ public class DBWriter {
 			writer.newLine();
 		}
 	}
-	
+
 	private void outputScreen() {
-		System.out.println("Please, add this lines to your manifest file, inside the \"Application\" tab:");
+		System.out
+				.println("Please, add this lines to your manifest file, inside the \"Application\" tab:");
 		System.out.println("<provider");
-		System.out.println("android:name=\"" + packageName + ".Provider" + "\"");
-		System.out.println("android:authorities=\"" + packageName + ".Provider" + "\"");
+		System.out
+				.println("android:name=\"" + packageName + ".Provider" + "\"");
+		System.out.println("android:authorities=\"" + packageName + ".Provider"
+				+ "\"");
 		System.out.println("android:exported=\"false\" >");
 		System.out.println("</provider>");
 	}
